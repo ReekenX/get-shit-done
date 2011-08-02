@@ -3,7 +3,7 @@ get-shit-done is an easy to use command line program that blocks websites known 
 
 After cloning this repository, put it in your $PATH and ensure it is executable.
 
-Execute it as root because it modifies your hosts file and restarts your network daemon.
+Execute it as root because it modifies your hosts file and restarts your network daemon (if any).
 
 ## To get-shit-done
 `sudo get-shit-done work`
@@ -14,12 +14,8 @@ Execute it as root because it modifies your hosts file and restarts your network
 ### $siteList
 Add or remove elements of this array for sites to block or unblock.
 
-### ~/.get-shit-done.ini
-As an alternative to above, add lines in format
-sites[] = www.blah.com
-to this file
-
-If you are using the python script, the configuration file can contain list of comma-seperated sites as value to sites key. The duplicates will be removed, and www is prepended to eac
+### ./hosts.list
+List all domains (one per line) to deny.
 
 ### $restartNetworkingCommand
 Update this variable with the path to your network daemon along with any parameters needed to restart it.

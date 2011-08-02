@@ -11,10 +11,10 @@ def exit_error(error):
     print(error, file=sys.stderr)
     exit(1)
 
-ini_file = path.expanduser(path.join("~", ".get-shit-done.ini"))
+list_file = path.join(os.getcwd(), "hosts.list")
 
 if "linux" in sys.platform:
-    restart_network_command = ["/etc/init.d/networking", "restart"]
+    restart_network_command = ["echo", "-n"]
 elif "darwin" in sys.platform:
     restart_network_command = ["dscacheutil", "-flushcache"]
 else:
@@ -34,20 +34,15 @@ default_sites = ['reddit.com', 'forums.somethingawful.com', 'somethingawful.com'
                  'meetup.com', 'myspace.com', 'plurk.com', 'stickam.com',
                  'stumbleupon.com', 'yelp.com', 'slashdot.org']
 
-def sites_from_ini(ini_file):
-    # this enables the ini file to be written like
-    # sites = google.com, facebook.com, quora.com ....
-    if os.path.exists(ini_file):
+def sites_from_file(filename):
+    if os.path.exists(filename):
         site_list = []
-        ini_file_handle = open(ini_file)
-        for line in ini_file_handle:
-            key, value = [each.strip() for each in line.split("=", 1)]
-            if key == "sites":
-                for item in [each.strip() for each in value.split(",")]:
-                    site_list.append(item)
+        file_handle = open(filename)
+        for line in file_handle.readlines():
+            site_list.append(line.strip())
         return site_list
     else:
-        raise Exception('No ini file in the user home dir')
+        raise Exception('No list file in the user home dir')
 
 
 def rehash():
@@ -57,10 +52,7 @@ def work():
     hFile = open(hosts_file, 'a+')
     contents = hFile.read()
 
-    try:
-        site_list = sites_from_ini(ini_file)
-    except:
-        site_list = default_sites
+    site_list = sites_from_file(list_file)
 
     if start_token in contents and end_token in contents:
         exit_error("Work mode already set.")
