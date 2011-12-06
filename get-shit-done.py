@@ -5,13 +5,13 @@ import sys
 import getpass
 import subprocess
 import os
-from os import path
+
 
 def exit_error(error):
     print(error, file=sys.stderr)
     exit(1)
 
-list_file = path.join(os.getcwd(), "hosts.list")
+list_file = os.path.join(os.getcwd(), "hosts.list")
 
 if "linux" in sys.platform:
     restart_network_command = ["echo", "-n"]
@@ -26,13 +26,12 @@ else:
 hosts_file = '/etc/hosts'
 start_token = '## start-gsd'
 end_token = '## end-gsd'
-default_sites = ['reddit.com', 'forums.somethingawful.com', 'somethingawful.com',
-                 'digg.com', 'break.com', 'news.ycombinator.com', 'infoq.com',
-                 'bebo.com', 'twitter.com', 'facebook.com', 'blip.com',
-                 'youtube.com', 'vimeo.com', 'delicious.com', 'flickr.com',
-                 'friendster.com', 'hi5.com', 'linkedin.com', 'livejournal.com',
-                 'meetup.com', 'myspace.com', 'plurk.com', 'stickam.com',
-                 'stumbleupon.com', 'yelp.com', 'slashdot.org']
+default_sites = ['reddit.com', 'digg.com', 'break.com', 'news.ycombinator.com',
+                 'twitter.com', 'facebook.com', 'blip.com', 'youtube.com',
+                 'vimeo.com', 'delicious.com', 'flickr.com', 'friendster.com',
+                 'hi5.com', 'linkedin.com', 'livejournal.com', 'plurk.com',
+                 'stumbleupon.com', 'slashdot.org']
+
 
 def sites_from_file(filename):
     if os.path.exists(filename):
@@ -47,6 +46,7 @@ def sites_from_file(filename):
 
 def rehash():
     subprocess.check_call(restart_network_command)
+
 
 def work():
     hFile = open(hosts_file, 'a+')
@@ -68,6 +68,7 @@ def work():
 
     rehash()
 
+
 def play():
     hosts_file_handle = open(hosts_file, "r+")
     lines = hosts_file_handle.readlines()
@@ -87,12 +88,14 @@ def play():
 
         rehash()
 
+
 def main():
     if getpass.getuser() != 'root':
         exit_error('Please run script as root.')
     if len(sys.argv) != 2:
         exit_error('usage: ' + sys.argv[0] + ' [work|play]')
     {"work": work, "play": play}[sys.argv[1]]()
+
 
 if __name__ == "__main__":
     main()
