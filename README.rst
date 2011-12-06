@@ -13,6 +13,8 @@ Make a list of websites which distracts you from work and put to home directory 
     twitter.com
     etc.
 
+One line per domain without ``www``.
+
 Turn on and off
 ---------------
 
