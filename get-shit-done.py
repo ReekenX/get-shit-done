@@ -34,6 +34,9 @@ default_sites = ['reddit.com', 'digg.com', 'break.com', 'news.ycombinator.com',
 
 
 def sites_from_file(filename):
+    """Returns list of domains (strings). Raises Exception if user has no
+    hosts.list file in his/her home directory.
+    """
     if os.path.exists(filename):
         site_list = []
         file_handle = open(filename)
