@@ -52,7 +52,11 @@ def work():
     hFile = open(hosts_file, 'a+')
     contents = hFile.read()
 
-    site_list = sites_from_file(list_file)
+    try:
+        site_list = sites_from_file(list_file)
+    except:
+        # Yes, generic exception should not be used.
+        site_list = default_sites
 
     if start_token in contents and end_token in contents:
         exit_error("Work mode already set.")
