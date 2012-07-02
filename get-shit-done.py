@@ -6,6 +6,8 @@ import getpass
 import subprocess
 import os
 
+from exceptions import IOError
+
 
 def exit_error(error):
     print(error, file=sys.stderr)
@@ -37,14 +39,11 @@ def sites_from_file(filename):
     """Returns list of domains (strings). Raises Exception if user has no
     hosts.list file in his/her home directory.
     """
-    if os.path.exists(filename):
-        site_list = []
-        file_handle = open(filename)
-        for line in file_handle.readlines():
-            site_list.append(line.strip())
-        return site_list
-    else:
-        raise Exception('No list file in the user home dir')
+    site_list = []
+    file_handle = open(filename)
+    for line in file_handle.readlines():
+        site_list.append(line.strip())
+    return site_list
 
 
 def rehash():
@@ -57,8 +56,8 @@ def work():
 
     try:
         site_list = sites_from_file(list_file)
-    except:
-        # Yes, generic exception should not be used.
+    except IOError as e:
+        # file does not exist or there are other issues related to file reading
         site_list = default_sites
 
     if start_token in contents and end_token in contents:
