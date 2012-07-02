@@ -58,6 +58,8 @@ def work():
         site_list = sites_from_file(list_file)
     except IOError as e:
         # file does not exist or there are other issues related to file reading
+        print('Failed to read "%s" host file, using default hosts.' % list_file,
+              file=sys.stderr)
         site_list = default_sites
 
     if start_token in contents and end_token in contents:
