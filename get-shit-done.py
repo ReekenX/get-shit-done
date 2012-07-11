@@ -6,6 +6,8 @@ import getpass
 import subprocess
 import os
 
+from exceptions import IOError
+
 
 def exit_error(error):
     print(error, file=sys.stderr)
@@ -34,14 +36,14 @@ default_sites = ['reddit.com', 'digg.com', 'break.com', 'news.ycombinator.com',
 
 
 def sites_from_file(filename):
-    if os.path.exists(filename):
-        site_list = []
-        file_handle = open(filename)
-        for line in file_handle.readlines():
-            site_list.append(line.strip())
-        return site_list
-    else:
-        raise Exception('No list file in the user home dir')
+    """Returns list of domains (strings). Raises Exception if user has no
+    hosts.list file in his/her home directory.
+    """
+    site_list = []
+    file_handle = open(filename)
+    for line in file_handle.readlines():
+        site_list.append(line.strip())
+    return site_list
 
 
 def rehash():
@@ -52,7 +54,13 @@ def work():
     hFile = open(hosts_file, 'a+')
     contents = hFile.read()
 
-    site_list = sites_from_file(list_file)
+    try:
+        site_list = sites_from_file(list_file)
+    except IOError as e:
+        # file does not exist or there are other issues related to file reading
+        print('Failed to read "%s" host file, using default hosts.' % list_file,
+              file=sys.stderr)
+        site_list = default_sites
 
     if start_token in contents and end_token in contents:
         exit_error("Work mode already set.")
